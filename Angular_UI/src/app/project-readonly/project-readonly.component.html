@@ -1,0 +1,79 @@
+<div *ngIf="!show">
+
+<div class="row p-4">
+    <div class="col callout callout-info">
+        <h1>PROJECT CODE</h1>
+        <h2 class="text-info">{{data.projectCode | uppercase}}</h2>
+    </div>
+    <div class="col callout callout-info">
+        <h1>PROJECT NAME</h1>
+        <h2 class="text-info">{{data.projectName | uppercase}}</h2>
+    </div>
+    <div class="col callout callout-info">
+        <h1>PROJECT MANAGER</h1>
+        <h2 class="text-info">{{data.projectManager.empName | uppercase}}</h2>
+    </div>
+    <div class="col callout callout-info">
+        <h1>MANAGER EMAIL</h1>
+        <h2 class="text-info">{{data.projectManager.emailId}}</h2>
+    </div>
+</div>
+
+<div class="row p-4" *ngIf="dataSource">
+    <mat-card class="w-100">
+        <h1>PROJECT MEMBERS</h1>
+        <mat-card-content>
+            <mat-form-field class="w-100">
+                <mat-label>Filter</mat-label>
+                <input matInput (keyup)="applyFilter($event)" placeholder="Ex. employee name" #input>
+            </mat-form-field>
+
+            <div>
+                <mat-table [dataSource]="dataSource" #sort matSort>
+
+                    <ng-container matColumnDef="employeeId">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> EMPLOYEE ID </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.employeeId}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="empName">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>EMPLOYEE NAME</mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.empName}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="emailId">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>EMAIL ID</mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.emailId}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="phoneNo">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>PHONE NO</mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.phoneNo}} </mat-cell>
+                    </ng-container>
+
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+                    <!-- Row shown when there is no matching data. -->
+                    <tr class="mat-row text-center" *matNoDataRow>
+                        <td class="mat-cell vw-100 p-3" colspan="10">No data found</td>
+                    </tr>
+                </mat-table>
+
+                <mat-paginator #paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>
+
+</div>
+
+<div *ngIf="show" class="container h-80">
+    <div class="row align-items-center h-80">
+        <div class="col-6 mx-auto">
+            <div class="alert alert-danger text-center font-size-20" role="alert">
+                NO PROJECT MAPPED YET
+              </div>
+        </div>
+    </div>
+</div>

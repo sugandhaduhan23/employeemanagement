@@ -1,0 +1,86 @@
+<div class="row p-4">
+    <mat-card class="w-100">
+        <mat-card-header>
+            <mat-card-title>Employee List</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <mat-form-field>
+                <mat-label>Filter</mat-label>
+                <input matInput (keyup)="applyFilter($event)" placeholder="Ex. employee name" #input>
+            </mat-form-field>
+
+            <div>
+                <mat-table [dataSource]="dataSource" #sort matSort>
+
+                    <ng-container matColumnDef="employeeId">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> EMPLOYEE ID </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.employeeId}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="empName">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> EMPLOYEE NAME </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.empName}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="emailId">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> EMAIL </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.emailId}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="role">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> ROLE </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.role ? row.role.roleName : 'NA'}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="department">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> DEPARTMENT </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.department ? row.department.departmentName : 'NA' }} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="salary">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> SALARY </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.salary ? row.salary : 'NA' }} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="dateOfJoining">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> DATE OF JOINING</mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.dateOfJoining ? (row.dateOfJoining | date) : 'NA'}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="project">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> PROJECT </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.project ? row.project.projectName : 'NA'}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="manager">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> MANAGER </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.manager ? row.manager.empName : 'NA'}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="action">
+                        <mat-header-cell *matHeaderCellDef> ACTION </mat-header-cell>
+                        <mat-cell *matCellDef="let element" class="action-link py-1"> 
+                            <button (click)="openDialog(element)" [disabled]="element.role.roleId == 1"  mat-mini-fab class="mr-1" color="primary" aria-label="Example icon button with a delete icon">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                            <button (click)="openDeleteDialog(element)" [disabled]="element.role.roleId == 1 || element.employeeId == employeeId " mat-mini-fab color="primary" aria-label="Example icon button with a delete icon">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                        </mat-cell>
+                    </ng-container>
+
+                  
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+                    <!-- Row shown when there is no matching data. -->
+                    <tr class="mat-row text-center" *matNoDataRow>
+                        <td class="mat-cell vw-100 p-3" colspan="10">No data found</td>
+                    </tr>
+                </mat-table>
+
+                <mat-paginator #paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>

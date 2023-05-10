@@ -1,0 +1,125 @@
+<div *ngIf="!show">
+
+    <div class="row p-4">
+        <form class="w-100" #f="ngForm" [formGroup]="resourceMappingForm" (ngSubmit)="mapResources(f)">
+            <mat-card>
+                <mat-card-header>
+                    <mat-card-title>MAP RESOURCES</mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <div class="row mb-1">
+
+                        <mat-form-field class="col" appearance="outline">
+                            <mat-label>Project</mat-label>
+                            <select matNativeControl formControlName="projectId" (change)='fetchTeamMembers()'>
+                                <option value="">Choose Project</option>
+                                <option *ngFor="let p of projects" [ngValue]="p.projectId"
+                                    [disabled]="this.managersproject != p.projectId ">
+                                    {{ p.projectCode + '-' + p.projectName }}
+                                </option>
+                            </select>
+                            <mat-error *ngIf="resourceMappingForm.controls['projectId'].invalid">
+                                <div *ngIf="resourceMappingForm.controls['projectId'].errors.required">Please select a
+                                    project</div>
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field class="col" appearance="outline">
+                            <mat-label>Resources</mat-label>
+                            <mat-select formControlName="teamMembers" multiple>
+                                <mat-option *ngFor="let e of employees" [value]="e.empId" [disabled]="e.projectId != 0">
+                                    {{e.empName }}
+                                </mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="resourceMappingForm.controls['teamMembers'].invalid">
+                                <div *ngIf="resourceMappingForm.controls['teamMembers'].errors.required">Please select a
+                                    resource</div>
+                            </mat-error>
+                        </mat-form-field>
+                    </div>
+
+                    <div class="row">
+                        <div class="col text-right">
+                            <button mat-raised-button color="primary" [disabled]="!resourceMappingForm.valid"
+                                class="col-1 mr-2">MAP</button>
+                            <!-- <button mat-raised-button type="button" class="col-1" (click)="resetForm(f)">Reset</button> -->
+                        </div>
+                    </div>
+                    <div class="row justify-content-end">
+                        <div class="alert col-5 d-none alert-danger mt-2" role="alert">
+                        </div>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </form>
+    </div>
+
+    <div class="row p-4" *ngIf="dataSource">
+        <mat-card class="w-100">
+            <mat-card-header>
+                <mat-card-title>PROJECT MEMBERS</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <mat-form-field class="w-100">
+                    <mat-label>Filter</mat-label>
+                    <input matInput (keyup)="applyFilter($event)" placeholder="Ex. employee name" #input>
+                </mat-form-field>
+
+                <div>
+                    <mat-table [dataSource]="dataSource" #sort matSort>
+
+                        <ng-container matColumnDef="employeeId">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header> EMPLOYEE ID </mat-header-cell>
+                            <mat-cell *matCellDef="let row"> {{row.employeeId}} </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="empName">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header>EMPLOYEE NAME</mat-header-cell>
+                            <mat-cell *matCellDef="let row"> {{row.empName}} </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="emailId">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header>EMAIL ID</mat-header-cell>
+                            <mat-cell *matCellDef="let row"> {{row.emailId}} </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="phoneNo">
+                            <mat-header-cell *matHeaderCellDef mat-sort-header>PHONE NO</mat-header-cell>
+                            <mat-cell *matCellDef="let row"> {{row.phoneNo}} </mat-cell>
+                        </ng-container>
+
+                        <ng-container matColumnDef="action">
+                            <mat-header-cell *matHeaderCellDef> ACTION </mat-header-cell>
+                            <mat-cell *matCellDef="let element" class="action-link py-1">
+                                <button mat-raised-button class="mr-1" color="primary"
+                                    (click)="unmapResources(element)">
+                                    UNMAP
+                                </button>
+                            </mat-cell>
+                        </ng-container>
+
+                        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+                        <!-- Row shown when there is no matching data. -->
+                        <tr class="mat-row text-center" *matNoDataRow>
+                            <td class="mat-cell vw-100 p-3" colspan="10">No data found</td>
+                        </tr>
+                    </mat-table>
+
+                    <mat-paginator #paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>
+
+<div *ngIf="show" class="container h-80">
+    <div class="row align-items-center h-80">
+        <div class="col-6 mx-auto">
+            <div class="alert alert-danger text-center font-size-20" role="alert">
+                CREATE A PROJECT FIRST
+            </div>
+        </div>
+    </div>
+</div>

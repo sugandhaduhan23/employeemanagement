@@ -1,0 +1,119 @@
+<div class="row p-4">
+    <form class="w-100" #f="ngForm" [formGroup]="projectForm" (ngSubmit)="createProject(f)">
+        <mat-card>
+            <mat-card-header>
+                <mat-card-title>ADD NEW PROJECT</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="row mb-1">
+                    <mat-form-field class="col">
+                        <mat-label>Project Code</mat-label>
+                        <input matInput placeholder="Enter Project Code" formControlName="projectCode">
+                        <mat-error *ngIf="projectForm.controls['projectCode'].invalid">
+                            <div *ngIf="projectForm.controls['projectCode'].errors.required">Project Code is required</div>
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field class="col">
+                        <mat-label>Project Name</mat-label>
+                        <input matInput placeholder="Enter Project Name" formControlName="projectName">
+                        <mat-error *ngIf="projectForm.controls['projectName'].invalid">
+                            <div *ngIf="projectForm.controls['projectName'].errors.required">Project Name is required</div>
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field class="col" appearance="outline">
+                        <mat-label>Manager</mat-label>
+                        <select matNativeControl formControlName="projectManagerId">
+                            <option value="">Choose Project Manager</option>
+                            <option *ngFor="let m of managers" [ngValue]="m.empId" [disabled]="m.projectId != 0">
+                                {{m.empName}}
+                            </option>
+                        </select>
+                        <mat-error *ngIf="projectForm.controls['projectManagerId'].invalid">
+                            <div *ngIf="projectForm.controls['projectManagerId'].errors.required">Please select a
+                                manager</div>
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field class="col">
+                        <mat-label>Team Size</mat-label>
+                        <input matInput placeholder="Enter Team Size" formControlName="teamSize">
+                        <mat-error *ngIf="projectForm.controls['teamSize'].invalid">
+                            <div *ngIf="projectForm.controls['teamSize'].errors.required">Team Size is required</div>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="row">
+                    <div class="col text-right">
+                        <button mat-raised-button color="primary" [disabled]="!projectForm.valid" class="col-1 mr-2">Save</button>
+                        <button mat-raised-button type="button" class="col-1" (click)="resetForm(f)">Reset</button>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </form>
+</div>
+
+
+<div class="row p-4">
+    <mat-card class="w-100">
+        <mat-card-header>
+            <mat-card-title>PROJECT LIST</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <mat-form-field class="w-100">
+                <mat-label>Filter</mat-label>
+                <input matInput (keyup)="applyFilter($event)" placeholder="Ex. projectname" #input>
+            </mat-form-field>
+
+            <div>
+                <mat-table [dataSource]="dataSource" #sort matSort>
+
+                    <ng-container matColumnDef="projectCode">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> PROJECT CODE </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.projectCode}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="projectName">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> PROJECT NAME </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.projectName}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="projectManager">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> MANAGER </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.projectManager.empName}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="teamSize">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> TEAM SIZE </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.teamSize}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="action">
+                        <mat-header-cell *matHeaderCellDef> ACTION </mat-header-cell>
+                        <mat-cell *matCellDef="let element" class="action-link py-1"> 
+                            <button (click)="openDialog(element)" [disabled]="element.projectManager.employeeId != employeeId" mat-mini-fab class="mr-1" color="primary">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                            <button (click)="openDeleteDialog(element)" [disabled]="element.projectManager.employeeId != employeeId" mat-mini-fab color="primary">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                        </mat-cell>
+                    </ng-container>
+
+                   <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+
+                    <!-- Row shown when there is no matching data. -->
+                    <tr class="mat-row text-center" *matNoDataRow>
+                        <td class="mat-cell vw-100 p-3" colspan="10">No data found</td>
+                    </tr>
+                </mat-table>
+
+                <mat-paginator #paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>
