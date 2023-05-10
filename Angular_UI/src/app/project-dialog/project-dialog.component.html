@@ -1,0 +1,49 @@
+<h1 mat-dialog-title>EDIT PROJECT DETAILS</h1>
+<form class="w-100" #f="ngForm" [formGroup]="projectForm" (ngSubmit)="updateProject()">
+<div mat-dialog-content>
+    <div class="row mb-1">
+        <mat-form-field class="col">
+            <mat-label>Project Code</mat-label>
+            <input matInput placeholder="Enter Project Code" formControlName="projectCode">
+            <mat-error *ngIf="projectForm.controls['projectCode'].invalid">
+                <div *ngIf="projectForm.controls['projectCode'].errors.required">Project Code is required</div>
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="col">
+            <mat-label>Project Name</mat-label>
+            <input matInput placeholder="Enter Project Name" formControlName="projectName">
+            <mat-error *ngIf="projectForm.controls['projectName'].invalid">
+                <div *ngIf="projectForm.controls['projectName'].errors.required">Project Name is required</div>
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="col" appearance="outline">
+            <mat-label>Manager</mat-label>
+            <select matNativeControl formControlName="projectManagerId">
+                <option value="">Choose Project Manager</option>
+
+                <option *ngFor="let m of managers" [ngValue]="m.empId" [disabled]="m.projectId != 0">
+                    {{ m.empName }}
+                </option>
+            </select>
+            <mat-error *ngIf="projectForm.controls['projectManagerId'].invalid">
+                <div *ngIf="projectForm.controls['projectManagerId'].errors.required">Please select a
+                    manager</div>
+            </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="col">
+            <mat-label>Team Size</mat-label>
+            <input matInput placeholder="Enter Team Size" formControlName="teamSize">
+            <mat-error *ngIf="projectForm.controls['teamSize'].invalid">
+                <div *ngIf="projectForm.controls['teamSize'].errors.required">Team Size is required</div>
+            </mat-error>
+        </mat-form-field>
+    </div>
+</div>
+<div mat-dialog-actions class="float-right">
+    <button mat-raised-button color="primary" (click)="updateProject()">Update</button>
+    <button mat-button mat-dialog-close>Cancel</button>
+</div>
+</form>

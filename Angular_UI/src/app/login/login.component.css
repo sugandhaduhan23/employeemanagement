@@ -1,0 +1,45 @@
+.content {
+    font-family: "Roboto", sans-serif;
+    background-color: #f8fafb; 
+    height: 100vh;
+}
+
+.content a {
+    color: #888;
+    text-decoration: underline;
+}
+
+.content a:hover {
+    text-decoration: none !important;
+}
+
+.container{
+    padding: 7rem 0;
+}
+
+.fas{
+    color: #6b62ff;
+    font-size: 100px;
+}
+
+.mat-input-element {
+  color: black;
+}
+
+.content .btn {
+    height: 54px;
+    padding-left: 30px;
+    padding-right: 30px; 
+}
+ 
+.btn-primary{
+    background: #6b62ff!important; 
+}
+
+input:-webkit-autofill{
+    -webkit-text-fill-color: #000!important;
+}
+
+.carousel-indicators li { 
+    display:none; 
+}

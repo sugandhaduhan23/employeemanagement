@@ -1,0 +1,150 @@
+<div class="row p-4">
+    <mat-accordion class="col">
+        <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <h1 class="mt-4">LEAVE DETAILS</h1>
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div>
+                <mat-table [dataSource]="leaveBalance">
+
+                    <ng-container matColumnDef="leaveType">
+                        <mat-header-cell *matHeaderCellDef> LEAVE TYPE </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.leave.leaveType}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="leavesAllowed">
+                        <mat-header-cell *matHeaderCellDef>LEAVES ALLOWED</mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.leave.leavesAllowed}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="leaveBalance">
+                        <mat-header-cell *matHeaderCellDef>LEAVES BALANCE</mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.leaveBalance}} </mat-cell>
+                    </ng-container>
+
+                    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                </mat-table>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>
+
+<div class="row p-4">
+    <form class="w-100" #f="ngForm" [formGroup]="leaveRequestForm" (ngSubmit)="sendLeaveRequest(f)">
+        <mat-card>
+            <mat-card-header>
+                <mat-card-title>NEW LEAVE REQUEST</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <div class="row mb-1">
+
+                    <mat-form-field class="col">
+                        <mat-label>Leave Reason</mat-label>
+                        <input matInput placeholder="Enter Leave Reason" formControlName="leaveReason">
+                        <mat-error *ngIf="leaveRequestForm.controls['leaveReason'].invalid">
+                            <div *ngIf="leaveRequestForm.controls['leaveReason'].errors.required">Reason is required
+                            </div>
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field class="col" appearance="outline">
+                        <mat-label>Leave Type</mat-label>
+                        <select matNativeControl formControlName="leaveTypeId">
+                            <option value="">Choose Leave Type</option>
+                            <option *ngFor="let lt of leaveType" [ngValue]="lt.leaveTypeId">
+                                {{ lt.leaveType }}
+                            </option>
+                        </select>
+                        <mat-error *ngIf="leaveRequestForm.controls['leaveTypeId'].invalid">
+                            <div *ngIf="leaveRequestForm.controls['leaveTypeId'].errors.required">Please select a leave
+                                Type manager</div>
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field class="col" appearance="outline">
+                        <mat-label>Enter a date range</mat-label>
+                        <mat-date-range-input [rangePicker]="picker">
+                            <input matStartDate formControlName="leaveFrom" placeholder="Start date">
+                            <input matEndDate formControlName="leaveTo" placeholder="End date">
+                        </mat-date-range-input>
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-date-range-picker #picker></mat-date-range-picker>
+                        <mat-error *ngIf="leaveRequestForm.controls['leaveFrom'].invalid || leaveRequestForm.controls['leaveTo'].invalid ">
+                            <div>Start and end date cannot be empty
+                           </div>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="row">
+                    <div class="col text-right">
+                        <button mat-raised-button color="primary" [disabled]="!leaveRequestForm.valid"
+                            class="col-1 mr-2">Save</button>
+                        <button mat-raised-button type="button" class="col-1" (click)="resetForm(f)">Reset</button>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </form>
+</div>
+
+<div class="row p-4">
+    <mat-accordion class="col">
+        <mat-expansion-panel [expanded]="true">
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <h1 class="mt-4">ALL LEAVE REQUESTS</h1>
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div>
+                <mat-table [dataSource]="dataSource" #sort matSort>
+
+                    <ng-container matColumnDef="leaveType">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> LEAVE TYPE </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.leave.leaveType}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="leaveReason">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header> LEAVE REASON </mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.leaveReason}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="leaveFrom">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>LEAVE START DATE</mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.leaveFrom | date}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="leaveTo">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>LEAVE END DATE</mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.leaveTo | date}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="status">
+                        <mat-header-cell *matHeaderCellDef mat-sort-header>LEAVES STATUS</mat-header-cell>
+                        <mat-cell *matCellDef="let row"> {{row.status == 1 ? 'PENDING' : row.status == 2 ? 'APPROVED' : 'REJECTED'}} </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="action">
+                        <mat-header-cell *matHeaderCellDef> ACTION </mat-header-cell>
+                        <mat-cell *matCellDef="let element" class="action-link py-1"> 
+                            <button (click)="withdrawLeaveRequest(element)" [disabled] = "element.status == 3" mat-raised-button class="mr-1" color="primary">
+                               WITHDRAW
+                            </button>
+                        </mat-cell>
+                    </ng-container>
+
+                    <mat-header-row *matHeaderRowDef="leaveTableColumns"></mat-header-row>
+                    <mat-row *matRowDef="let row; columns: leaveTableColumns;"></mat-row>
+                    <tr class="mat-row text-center" *matNoDataRow>
+                        <td class="mat-cell vw-100 p-3" colspan="10">No data found</td>
+                    </tr>
+                </mat-table>
+
+                <mat-paginator #paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+            </div>
+        </mat-expansion-panel>
+    </mat-accordion>
+</div>

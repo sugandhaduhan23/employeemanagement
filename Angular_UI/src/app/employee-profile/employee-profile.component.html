@@ -1,0 +1,213 @@
+<div *ngIf="formData" class="row p-4">
+    <form class="w-100" #f="ngForm" [formGroup]="employeeForm" (ngSubmit)="updateEmployeeDetails(f)">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Edit Profile</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="row mb-1">
+            <mat-form-field class="col">
+              <mat-label>Employee Name</mat-label>
+              <input matInput placeholder="Enter Name" formControlName="empName">
+              <mat-error *ngIf="employeeForm.controls['empName'].invalid">
+                <div *ngIf="employeeForm.controls['empName'].errors.required">Name is required</div>
+                <div *ngIf="employeeForm.controls['empName'].errors.maxlength">Name should be less than 10 characters</div>
+              </mat-error>
+            </mat-form-field>
+  
+            <mat-form-field class="col">
+              <mat-label>Email ID</mat-label>
+              <input matInput placeholder="Enter Email Id" formControlName="emailId">
+              <mat-error *ngIf="employeeForm.controls['emailId'].invalid">
+                <mat-error *ngIf="employeeForm.controls['emailId'].errors.required">Email is required</mat-error>
+                <mat-error *ngIf="employeeForm.controls['emailId'].errors.email">Invalid Email</mat-error>
+              </mat-error>
+            </mat-form-field>
+  
+            <mat-form-field class="col" appearance="outline">
+              <mat-label>Date of Joining</mat-label>
+              <input matInput [matDatepicker]="dojpicker" formControlName="dateOfJoining">
+              <mat-datepicker-toggle matSuffix [for]="dojpicker"></mat-datepicker-toggle>
+              <mat-datepicker #dojpicker></mat-datepicker>
+              <mat-error *ngIf="employeeForm.controls['dateOfJoining'].invalid">
+                <div *ngIf="employeeForm.controls['dateOfJoining'].errors.required">DOJ is required</div>
+              </mat-error>
+            </mat-form-field>
+  
+            <mat-form-field class="col" appearance="outline">
+              <mat-label>Date of Birth</mat-label>
+              <input matInput [matDatepicker]="picker" formControlName="dob">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+              <mat-error *ngIf="employeeForm.controls['dob'].invalid">
+                <div *ngIf="employeeForm.controls['dob'].errors.required">DOB is required</div>
+              </mat-error>
+            </mat-form-field>
+          </div>
+  
+          <div class="row mb-1">
+            <mat-form-field class="col">
+              <mat-label>Employee Salary</mat-label>
+              <input matInput placeholder="Enter Salary" type="number" formControlName="salary">
+              <mat-error *ngIf="employeeForm.controls['salary'].invalid">
+                <div *ngIf="employeeForm.controls['salary'].errors.required">Salary is required</div>
+              </mat-error>
+            </mat-form-field>
+  
+            <mat-form-field class="col" appearance="outline">
+              <mat-label>Gender</mat-label>
+              <select matNativeControl formControlName="gender">
+                <option value="">Choose Gender</option>
+                <option *ngFor="let g of gender" [ngValue]="g">
+                  {{g}}
+                </option>
+              </select>
+              <mat-error *ngIf="employeeForm.controls['gender'].invalid">
+                <div *ngIf="employeeForm.controls['gender'].errors.required">Please select a gender</div>
+              </mat-error>
+            </mat-form-field>
+  
+            <mat-form-field class="col">
+              <mat-label>Phone</mat-label>
+              <ngx-11-mat-intl-tel-input
+                    [preferredCountries]="['us', 'in']"
+                    [enablePlaceholder]="true"
+                    [enableSearch]="true"
+                    name="phone"
+                    formControlName="phoneNo"
+                    #phone>
+              </ngx-11-mat-intl-tel-input>
+              <mat-error *ngIf="employeeForm.controls['phoneNo'].invalid">
+                <div>Invalid Number</div>
+              </mat-error>
+            <mat-hint>eg : {{phone.selectedCountry.placeHolder}}</mat-hint>
+            </mat-form-field>
+  
+            <mat-form-field class="col">
+              <mat-label>Choose Photo</mat-label>
+              <input matInput mat-raised-button (click)="fileInput.click()" autocomplete="off" formControlName="fileName"/>
+            </mat-form-field>
+            <input hidden (change)="onFileSelected()" #fileInput type="file" id="file" accept="image/png, image/jpeg">
+          </div>
+  
+          <div class="row mb-1">
+  
+            <mat-form-field class="col" appearance="outline">
+              <mat-label>Department</mat-label>
+              <select matNativeControl formControlName="departmentId">
+                <option value="">Choose Department</option>
+                <option *ngFor="let dept of departments" [ngValue]="dept.departmentId">
+                  {{ dept.departmentName }}
+                </option>
+              </select>
+              <mat-error *ngIf="employeeForm.controls['departmentId'].invalid">
+                <div *ngIf="employeeForm.controls['departmentId'].errors.required">Please select a department</div>
+              </mat-error>
+            </mat-form-field>
+  
+            <mat-form-field class="col" appearance="outline">
+              <mat-label>Role</mat-label>
+              <select matNativeControl formControlName="roleId">
+                <option value="">Choose Role</option>
+                <option *ngFor="let role of roles" [ngValue]="role.roleId">
+                  {{ role.roleName }}
+                </option>
+              </select>
+              <mat-error *ngIf="employeeForm.controls['roleId'].invalid">
+                <div *ngIf="employeeForm.controls['roleId'].errors.required">Please select a role</div>
+              </mat-error>
+            </mat-form-field>
+  
+            <mat-form-field class="col" appearance="outline">
+              <mat-label>Project</mat-label>
+              <select matNativeControl formControlName="projectId">
+                <option value="">Choose Project</option>
+                <option *ngFor="let p of projects" [ngValue]="p.projectId">
+                    {{ p.projectCode + '-' + p.projectName }}
+                  </option>
+              </select>
+            </mat-form-field>
+  
+            <mat-form-field class="col" appearance="outline">
+              <mat-label>Manager</mat-label>
+              <select matNativeControl formControlName="managerId">
+                <option value="">Choose Manager</option>
+                <option *ngFor="let m of managers" [ngValue]="m.empId">
+                    {{ m.empName }}
+                  </option>
+              </select>
+            </mat-form-field>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      
+      <div formGroupName="address">
+        <mat-card class="w-100 my-4">
+          <mat-card-header>
+            <mat-card-title>Employee Address</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="row mb-1">
+              <mat-form-field class="col">
+                <mat-label>Street No</mat-label>
+                <input matInput placeholder="Enter Street Number" type="number" formControlName="streetNo">
+                <mat-error *ngIf="employeeForm.controls.address.controls['streetNo'].invalid">
+                  <div *ngIf="employeeForm.controls.address.controls['streetNo'].errors.required">StreetNo is required</div>
+                </mat-error>
+              </mat-form-field>
+  
+              <mat-form-field class="col">
+                <mat-label>Street Name</mat-label>
+                <input matInput placeholder="Enter Street" formControlName="streetName">
+                <mat-error *ngIf="employeeForm.controls.address.controls['streetName'].invalid">
+                  <div *ngIf="employeeForm.controls.address.controls['streetName'].errors.required">Street name is required</div>
+                </mat-error>
+              </mat-form-field>
+  
+              <mat-form-field class="col">
+                <mat-label>City Name</mat-label>
+                <input matInput placeholder="Enter City" formControlName="cityName">
+                <mat-error *ngIf="employeeForm.controls.address.controls['cityName'].invalid ">
+                  <div *ngIf="employeeForm.controls.address.controls['cityName'].errors.required">City name is required</div>
+                </mat-error>
+              </mat-form-field>
+  
+            </div>
+  
+            <div class="row mb-1">
+              <mat-form-field class="col">
+                <mat-label>State</mat-label>
+                <input matInput placeholder="Enter State" formControlName="state">
+                <mat-error *ngIf="employeeForm.controls.address.controls['state'].invalid">
+                  <div *ngIf="employeeForm.controls.address.controls['state'].errors.required">State is required</div>
+                </mat-error>
+              </mat-form-field>
+  
+              <mat-form-field class="col">
+                <mat-label>Country</mat-label>
+                <input matInput placeholder="Enter Country" formControlName="country">
+                <mat-error *ngIf="employeeForm.controls.address.controls['country'].invalid">
+                  <div *ngIf="employeeForm.controls.address.controls['country'].errors.required">Country is required</div>
+                </mat-error>
+              </mat-form-field>
+  
+              <mat-form-field class="col">
+                <mat-label>Zipcode</mat-label>
+                <input matInput placeholder="Enter Zipcode" type="number" formControlName="zipCode">
+                <mat-error *ngIf="employeeForm.controls.address.controls['zipCode'].invalid">
+                  <div *ngIf="employeeForm.controls.address.controls['zipCode'].errors.required">Zipcode is required</div>
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <div class="row">
+        <div class="col text-right">
+          <button mat-raised-button type="submit" color="primary" class="col-1 mr-2">Update</button>
+        </div>
+      </div>
+    
+  
+    </form>
+  </div>

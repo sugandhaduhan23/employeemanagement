@@ -1,0 +1,19 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+.mat-body, .mat-body-1, .mat-typography {
+        /* font: unset;
+        font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont,
+        "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji",
+        "Segoe UI Emoji", "Segoe UI Symbol" !important;
+        letter-spacing: normal; */
+}
+
+.cdk-overlay-container {
+        position: fixed;
+        z-index: 10000;
+}
+
+.mat-snack-bar-container {
+        margin-top: 61px!important;
+}
